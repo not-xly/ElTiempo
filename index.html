@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="El Tiempo">
+<meta name="theme-color" content="#0b3d91">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<title>El Tiempo USA</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#0b3d91,#3a7bd5);color:#fff;min-height:100vh;padding:calc(env(safe-area-inset-top) + 12px) 14px calc(env(safe-area-inset-bottom) + 20px)}
+h1{font-size:26px;font-weight:700;margin-bottom:12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.seg button{flex:1 1 auto;border:0;border-radius:18px;padding:9px 12px;font-size:15px;font-weight:600;background:rgba(255,255,255,.18);color:#fff}
+.seg button.on{background:#fff;color:#0b3d91}
+#status{font-size:13px;opacity:.8;margin:6px 0 10px}
+.day{display:grid;grid-template-columns:78px 40px 1fr 52px;align-items:center;gap:8px;background:rgba(255,255,255,.14);border-radius:14px;padding:11px 12px;margin-bottom:7px}
+.d1{font-weight:600;font-size:15px}.d2{font-size:12px;opacity:.75}
+.ico{font-size:28px;text-align:center}
+.t{font-size:16px}.t b{font-size:18px}.desc{font-size:12px;opacity:.8}
+.rain{text-align:right;font-size:13px}
+</style>
+</head>
+<body>
+<h1>El Tiempo</h1>
+<div class="seg" id="cities"></div>
+<div class="seg" id="days"></div>
+<div id="status"></div>
+<div id="list"></div>
+<script>
+const CITIES=[["Dallas",32.78,-96.80],["Las Vegas",36.17,-115.14],["Atlanta",33.75,-84.39],["Raleigh",35.78,-78.64],["Chicago",41.88,-87.63]];
+const DAYS=[3,7,14];
+const S=JSON.parse(localStorage.getItem("eltiempo-v1")||'{"c":0,"d":7}');
+const WMO={0:["☀️","Despejado"],1:["🌤️","Casi despejado"],2:["⛅","Parcialmente nuboso"],3:["☁️","Nublado"],45:["🌫️","Niebla"],48:["🌫️","Niebla"],51:["🌦️","Llovizna"],53:["🌦️","Llovizna"],55:["🌦️","Llovizna fuerte"],56:["🌧️","Llovizna helada"],57:["🌧️","Llovizna helada"],61:["🌧️","Lluvia débil"],63:["🌧️","Lluvia"],65:["🌧️","Lluvia fuerte"],66:["🌧️","Lluvia helada"],67:["🌧️","Lluvia helada"],71:["🌨️","Nieve débil"],73:["🌨️","Nieve"],75:["❄️","Nieve fuerte"],77:["🌨️","Granizo fino"],80:["🌦️","Chubascos"],81:["🌧️","Chubascos"],82:["⛈️","Chubascos fuertes"],85:["🌨️","Chubascos de nieve"],86:["❄️","Chubascos de nieve"],95:["⛈️","Tormenta"],96:["⛈️","Tormenta con granizo"],99:["⛈️","Tormenta con granizo"]};
+const DN=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],MN=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function seg(el,items,cur,fn){el.innerHTML="";items.forEach((t,i)=>{const b=document.createElement("button");b.textContent=t;if(i===cur)b.className="on";b.onclick=()=>fn(i);el.appendChild(b)})}
+function draw(){
+  localStorage.setItem("eltiempo-v1",JSON.stringify(S));
+  seg(cities,CITIES.map(c=>c[0]),S.c,i=>{S.c=i;draw()});
+  seg(days,DAYS.map(d=>d+" días"),DAYS.indexOf(S.d),i=>{S.d=DAYS[i];draw()});
+  load();
+}
+async function load(){
+  const [name,lat,lon]=CITIES[S.c],n=S.d,key="eltiempo-cache-"+S.c;
+  status.textContent="Cargando "+name+"…";
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=14`;
+  let data;
+  try{const r=await fetch(url);data=await r.json();localStorage.setItem(key,JSON.stringify({t:Date.now(),data}));status.textContent=name+" · "+n+" días · actualizado ahora"}
+  catch(e){const c=JSON.parse(localStorage.getItem(key)||"null");if(!c){status.textContent="Sin conexión y sin datos guardados";list.innerHTML="";return}data=c.data;status.textContent="Sin conexión · datos del "+new Date(c.t).toLocaleString("es-ES")}
+  if(CITIES[S.c][0]!==name||S.d!==n)return;
+  const x=data.daily;let h="";
+  for(let i=0;i<Math.min(n,x.time.length);i++){
+    const dt=new Date(x.time[i]+"T12:00"),w=WMO[x.weather_code[i]]||["🌡️",""];
+    const lbl=i===0?"Hoy":i===1?"Mañana":DN[dt.getDay()];
+    h+=`<div class="day"><div><div class="d1">${lbl}</div><div class="d2">${dt.getDate()} ${MN[dt.getMonth()]}</div></div><div class="ico">${w[0]}</div><div><div class="t"><b>${Math.round(x.temperature_2m_max[i])}°</b> / ${Math.round(x.temperature_2m_min[i])}°C</div><div class="desc">${w[1]}</div></div><div class="rain">💧${x.precipitation_probability_max[i]??0}%</div></div>`;
+  }
+  list.innerHTML=h;
+}
+draw();
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>

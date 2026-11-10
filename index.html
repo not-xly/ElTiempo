@@ -12,7 +12,8 @@
 <title>El Tiempo USA</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#0b3d91,#3a7bd5);color:#fff;min-height:100vh;padding:calc(env(safe-area-inset-top) + 12px) 14px calc(env(safe-area-inset-bottom) + 20px)}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#0b3d91,#3a7bd5);color:#fff;min-height:100vh;padding:0 14px calc(env(safe-area-inset-bottom) + 20px)}
+header{position:sticky;top:0;z-index:10;background:#0b3d91;margin:0 -14px 8px;padding:calc(env(safe-area-inset-top) + 12px) 14px 4px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
 h1{font-size:26px;font-weight:700;margin-bottom:12px}
 .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .seg button{flex:1 1 auto;border:0;border-radius:18px;padding:9px 12px;font-size:15px;font-weight:600;background:rgba(255,255,255,.18);color:#fff}
@@ -26,10 +27,12 @@ h1{font-size:26px;font-weight:700;margin-bottom:12px}
 </style>
 </head>
 <body>
+<header>
 <h1>El Tiempo</h1>
 <div class="seg" id="cities"></div>
 <div class="seg" id="days"></div>
 <div id="status"></div>
+</header>
 <div id="list"></div>
 <script>
 const CITIES=[["Dallas",32.78,-96.80],["Las Vegas",36.17,-115.14],["Atlanta",33.75,-84.39],["Raleigh",35.78,-78.64],["Chicago",41.88,-87.63]];

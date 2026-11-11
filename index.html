@@ -4,58 +4,73 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="El Tiempo">
-<meta name="theme-color" content="#0b3d91">
+<meta name="theme-color" content="#f7f1e3">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
 <title>El Tiempo</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#0b3d91,#3a7bd5);background-attachment:fixed;color:#fff;min-height:100vh;padding:0 14px calc(env(safe-area-inset-bottom) + 20px)}
-header{position:sticky;top:0;z-index:10;background:#0b3d91;margin:0 -14px 8px;padding:calc(env(safe-area-inset-top) + 10px) 14px 4px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
-.top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-h1{font-size:24px;font-weight:700;flex:1}
-.btn{border:0;border-radius:18px;padding:8px 14px;font-size:15px;font-weight:600;background:#fff;color:#0b3d91}
-.cur{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.cur .nm{font-size:19px;font-weight:700}.cur .rg{font-size:13px;opacity:.8}
-.star{border:0;background:none;font-size:26px;color:#ffcc33;margin-left:auto;padding:0 4px}
-.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;border:0;border-radius:16px;padding:7px 11px;font-size:14px;background:rgba(255,255,255,.18);color:#fff;white-space:nowrap}
-.chip.rec{background:rgba(255,255,255,.08);border:1px dashed rgba(255,255,255,.4)}
-.chip.on{background:#fff;color:#0b3d91;font-weight:600}
-.seg{display:flex;gap:6px;margin-bottom:6px}
-.seg button{flex:1;border:0;border-radius:18px;padding:8px;font-size:15px;font-weight:600;background:rgba(255,255,255,.18);color:#fff}
-.seg button.on{background:#fff;color:#0b3d91}
-#status{font-size:12px;opacity:.8;margin:4px 0}
-.legend{font-size:12px;opacity:.85;margin-bottom:8px}
-.day{display:grid;grid-template-columns:64px 1fr 34px;align-items:center;gap:8px;background:rgba(255,255,255,.14);border-radius:14px;padding:9px 11px;margin-bottom:7px}
-.d1{font-weight:600;font-size:15px}.d2{font-size:12px;opacity:.75}
-.src{display:flex;align-items:center;gap:6px;font-size:15px;line-height:1.5}
-.src .ic{font-size:20px;width:26px;text-align:center}.src b{font-size:16px}.src .r{margin-left:auto;font-size:13px;opacity:.9}
-.ok,.warn{text-align:center;font-size:20px}
-.empty{text-align:center;margin-top:50px;opacity:.9;font-size:16px;line-height:1.6}
-#search{position:fixed;inset:0;z-index:20;background:#0b3d91;padding:calc(env(safe-area-inset-top) + 10px) 14px 20px;display:none;flex-direction:column}
+:root{--bg:#f7f1e3;--card:#fffaf0;--line:#e6dcc6;--ink:#3b3226;--soft:#857a68;--acc:#b5651d}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:0 12px calc(env(safe-area-inset-bottom) + 70px)}
+header{position:sticky;top:0;z-index:10;background:var(--bg);margin:0 -12px 6px;padding:calc(env(safe-area-inset-top) + 6px) 12px 6px;border-bottom:1px solid var(--line)}
+.cur{display:flex;align-items:center;gap:6px;margin-bottom:6px;min-height:38px}
+.cur .txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cur .nm{font-size:20px;font-weight:700}.cur .rg{font-size:13px;color:var(--soft)}
+.icon{border:0;background:none;font-size:24px;color:var(--acc);padding:2px 6px}
+.seg{display:flex;gap:5px}
+.seg button{flex:1;border:1px solid var(--line);border-radius:16px;padding:6px;font-size:14px;font-weight:600;background:var(--card);color:var(--ink)}
+.seg button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+#info{font-size:11px;color:var(--soft);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day{display:grid;grid-template-columns:64px 1fr 26px;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:5px 10px;margin-bottom:5px}
+.d1{font-weight:600;font-size:14px}.d2{font-size:11px;color:var(--soft)}
+.src{display:flex;align-items:center;gap:5px;font-size:14px;line-height:1.45}
+.src .ic{font-size:18px;width:24px;text-align:center}.src b{font-size:15px}.src .r{margin-left:auto;font-size:12px;color:var(--soft)}
+.ok,.warn{text-align:center;font-size:17px}
+.empty{text-align:center;margin-top:40px;color:var(--soft);font-size:15px;line-height:1.6}
+.empty b{color:var(--ink)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1;border:0;background:none;padding:8px 0 6px;font-size:12px;color:var(--soft);display:flex;flex-direction:column;align-items:center;gap:1px}
+.tabs button span{font-size:22px}
+.tabs button.on{color:var(--acc);font-weight:600}
+.fhead{display:flex;align-items:center;padding:calc(env(safe-area-inset-top) + 8px) 0 8px}
+.fhead h2{flex:1;font-size:22px}
+.btn{border:0;border-radius:16px;padding:7px 13px;font-size:14px;font-weight:600;background:var(--acc);color:#fff}
+.fav{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px 10px 12px;margin-bottom:5px}
+.fav .txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px}
+.fav .txt small{font-size:13px;color:var(--soft)}
+.fav.on{border-color:var(--acc)}
+.del{border:0;background:none;color:var(--soft);font-size:18px;padding:0 8px}
+#search{position:fixed;inset:0;z-index:20;background:var(--bg);padding:calc(env(safe-area-inset-top) + 8px) 12px 20px;display:none;flex-direction:column}
 #search.open{display:flex}
-.srow{display:flex;gap:8px;margin-bottom:10px}
-#q{flex:1;font-size:17px;padding:10px 12px;border-radius:12px;border:0}
+.srow{display:flex;gap:8px;margin-bottom:8px}
+#q{flex:1;font-size:17px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}
 #res{overflow-y:auto;flex:1}
-.hint{font-size:13px;opacity:.85;margin:6px 2px 10px}
-.item{background:rgba(255,255,255,.14);border-radius:12px;padding:11px 12px;margin-bottom:6px}
-.item .nm{font-size:16px;font-weight:600}.item .rg{font-size:13px;opacity:.8}
+.hint{font-size:13px;color:var(--soft);margin:4px 2px 8px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:5px}
+.item .nm{font-size:16px;font-weight:600}.item .rg{font-size:13px;color:var(--soft)}
 </style>
 </head>
 <body>
+<div id="pForecast">
 <header>
-  <div class="top"><h1>El Tiempo</h1><button class="btn" id="openSearch">🔍 Buscar ciudad</button></div>
   <div class="cur" id="cur"></div>
-  <div class="chips" id="chips"></div>
   <div class="seg" id="days"></div>
-  <div id="status"></div>
+  <div id="info"></div>
 </header>
-<div class="legend" id="legend" hidden>🇪🇺 Modelo europeo (ECMWF) · 🇺🇸 Modelo americano (NOAA GFS)<br>✅ coinciden · ⚠️ no coinciden (difieren ≥3° o ≥30% de lluvia)</div>
 <div id="list"></div>
+</div>
+
+<div id="pFavs" hidden>
+  <div class="fhead"><h2>Favoritas</h2><button class="btn" id="addFav">+ Añadir</button></div>
+  <div id="favList"></div>
+</div>
+
+<nav class="tabs">
+  <button id="tForecast" class="on"><span>☀️</span>Previsión</button>
+  <button id="tFavs"><span>★</span>Favoritas</button>
+</nav>
 
 <div id="search">
   <div class="srow"><input id="q" type="search" placeholder="Escribe una ciudad…" autocomplete="off" autocorrect="off" spellcheck="false"><button class="btn" id="closeSearch">Cerrar</button></div>
@@ -78,41 +93,55 @@ const WMO={0:["☀️","Despejado"],1:["🌤️","Casi despejado"],2:["⛅","Par
 const DN=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],MN=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 
+const LEGEND="🇪🇺 ECMWF · 🇺🇸 NOAA GFS · ✅ coinciden · ⚠️ difieren";
 function draw(){
   save();
   const c=S.cur;
-  $("cur").innerHTML=c?`<div><div class="nm">${esc(c.n)}</div><div class="rg">${esc(region(c))}</div></div><button class="star" id="star" aria-label="Guardar">${isFav(c)?"★":"☆"}</button>`:"";
-  if(c)$("star").onclick=()=>{toggleFav(c);save();$("star").textContent=isFav(c)?"★":"☆";drawChips()};
-  drawChips();
+  $("cur").innerHTML=(c?`<div class="txt"><span class="nm">${esc(c.n)}</span> <span class="rg">${esc(region(c))}</span></div><button class="icon" id="star" aria-label="Guardar">${isFav(c)?"★":"☆"}</button>`:'<div class="txt"><span class="nm">El Tiempo</span></div>')+'<button class="icon" id="openSearch" aria-label="Buscar">🔍</button>';
+  if(c)$("star").onclick=()=>{toggleFav(c);save();$("star").textContent=isFav(c)?"★":"☆";drawFavs()};
+  $("openSearch").onclick=openSearch;
   const ds=$("days");ds.innerHTML="";
   DAYS.forEach(d=>{const b=document.createElement("button");b.textContent=d+" días";if(d===S.d)b.className="on";b.onclick=()=>{S.d=d;draw()};ds.appendChild(b)});
-  if(!c){$("legend").hidden=true;$("status").textContent="";$("list").innerHTML='<div class="empty">Toca <b>🔍 Buscar ciudad</b> para empezar.<br>Guarda tus ciudades con ☆ para tenerlas siempre arriba.</div>';return}
+  drawFavs();
+  if(!c){$("info").textContent="";$("list").innerHTML='<div class="empty">Toca <b>🔍</b> para buscar una ciudad.<br>Guárdala con <b>☆</b> y la tendrás en <b>Favoritas</b>.</div>';return}
   load();
 }
-function drawChips(){
-  const c=S.cur,ch=$("chips");ch.innerHTML="";
-  const add=(x,cls)=>{const b=document.createElement("button");b.className="chip "+cls+(c&&id(x)===id(c)?" on":"");b.textContent=(cls==="fav"?"★ ":"")+short(x);b.onclick=()=>pick(x);ch.appendChild(b)};
-  S.fav.forEach(x=>add(x,"fav"));
-  S.rec.filter(x=>!isFav(x)).forEach(x=>add(x,"rec"));
-  ch.style.display=ch.children.length?"flex":"none";
+function drawFavs(){
+  const L=$("favList"),c=S.cur;
+  const list=[...S.fav].sort((a,b)=>a.n.localeCompare(b.n,"es")||region(a).localeCompare(region(b),"es"));
+  L.innerHTML=list.length?"":'<div class="empty">Aún no tienes favoritas.<br>Busca una ciudad y toca <b>☆</b>.</div>';
+  list.forEach(x=>{
+    const r=document.createElement("div");r.className="fav"+(c&&id(x)===id(c)?" on":"");
+    r.innerHTML=`<div class="txt"><b>${esc(x.n)}</b> <small>${esc(region(x))}</small></div><button class="del" aria-label="Quitar">✕</button>`;
+    r.onclick=e=>{if(e.target.closest(".del")){S.fav=S.fav.filter(y=>id(y)!==id(x));draw();return}pick(x)};
+    L.appendChild(r);
+  });
 }
+function tab(t){
+  $("pForecast").hidden=t!=="f";$("pFavs").hidden=t!=="v";
+  $("tForecast").className=t==="f"?"on":"";$("tFavs").className=t==="v"?"on":"";scrollTo(0,0);
+}
+$("tForecast").onclick=()=>tab("f");$("tFavs").onclick=()=>tab("v");$("addFav").onclick=()=>{addingFav=true;openSearch()};
+let addingFav=false;
 const isFav=c=>S.fav.some(x=>id(x)===id(c));
 function toggleFav(c){if(isFav(c))S.fav=S.fav.filter(x=>id(x)!==id(c));else S.fav.push(c)}
 function pick(c){
-  S.cur=c;
+  if(addingFav&&!isFav(c))S.fav.push(c);
+  addingFav=false;
+  S.cur=c;tab("f");
   S.rec=[c,...S.rec.filter(x=>id(x)!==id(c))].slice(0,5);
   closeSearch();draw();scrollTo(0,0);
 }
 
 async function load(){
   const c=S.cur,n=S.d,k="eltiempo-cache-"+id(c);
-  $("status").textContent="Cargando "+c.n+"…";
+  $("info").textContent="Cargando "+c.n+"…";
   const url=`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&models=ecmwf_ifs025,gfs_seamless&timezone=auto&forecast_days=14`;
   let data,msg;
-  try{const r=await fetch(url);if(!r.ok)throw 0;data=await r.json();localStorage.setItem(k,JSON.stringify({t:Date.now(),data}));msg="Actualizado ahora"}
-  catch(e){const s=JSON.parse(localStorage.getItem(k)||"null");if(!s){if(S.cur===c){$("status").textContent="Sin conexión y sin datos guardados de "+c.n;$("list").innerHTML=""}return}data=s.data;msg="Sin conexión · datos del "+new Date(s.t).toLocaleString("es-ES")}
+  try{const r=await fetch(url);if(!r.ok)throw 0;data=await r.json();localStorage.setItem(k,JSON.stringify({t:Date.now(),data}));msg=LEGEND}
+  catch(e){const s=JSON.parse(localStorage.getItem(k)||"null");if(!s){if(S.cur===c){$("info").textContent="Sin conexión y sin datos guardados de "+c.n;$("list").innerHTML=""}return}data=s.data;msg="⚠️ Sin conexión · datos del "+new Date(s.t).toLocaleString("es-ES",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
   if(S.cur!==c||S.d!==n)return;
-  $("status").textContent=msg;$("legend").hidden=false;
+  $("info").textContent=msg;
   const x=data.daily,g=(v,m,i)=>x[v+"_"+m]?.[i];
   let h="";
   for(let i=0;i<Math.min(n,x.time.length);i++){
@@ -132,14 +161,19 @@ async function load(){
 
 // ---- Búsqueda: siempre se elige de una lista, nunca texto libre ----
 let timer,seq=0,found=[];
-function openSearch(){$("search").classList.add("open");$("q").value="";$("res").innerHTML='<div class="hint">Escribe al menos 2 letras. Si te equivocas en una letra, te propondré la ciudad correcta.</div>';setTimeout(()=>$("q").focus(),50)}
-function closeSearch(){$("search").classList.remove("open");$("q").blur()}
-$("openSearch").onclick=openSearch;$("closeSearch").onclick=closeSearch;
+function showRecent(){
+  found=S.rec;
+  $("res").innerHTML='<div class="hint">Escribe al menos 2 letras. Si te equivocas en una letra, te propondré la ciudad correcta.</div>'+
+    (found.length?'<div class="hint"><b>Recientes</b></div>'+found.map((c,i)=>`<div class="item" data-i="${i}"><div class="nm">${esc(c.n)}${isFav(c)?" ★":""}</div><div class="rg">${esc(region(c))}</div></div>`).join(""):"");
+}
+function openSearch(){$("search").classList.add("open");$("q").value="";showRecent();setTimeout(()=>$("q").focus(),50)}
+function closeSearch(){addingFav=false;$("search").classList.remove("open");$("q").blur()}
+$("closeSearch").onclick=closeSearch;
 $("q").oninput=()=>{clearTimeout(timer);timer=setTimeout(search,350)};
 $("q").onkeydown=e=>{if(e.key==="Enter"){clearTimeout(timer);search()}};
 async function search(){
   const q=$("q").value.trim(),my=++seq;
-  if(q.length<2){$("res").innerHTML="";return}
+  if(q.length<2){showRecent();return}
   $("res").innerHTML='<div class="hint">Buscando…</div>';
   let list=[],fuzzy=false;
   try{
